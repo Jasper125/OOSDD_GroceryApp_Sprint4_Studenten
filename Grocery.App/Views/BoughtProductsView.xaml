@@ -19,6 +19,7 @@
         ItemsSource="{Binding Products}"
         SelectedItem="{Binding SelectedProduct, Mode=TwoWay}" 
         SelectedIndexChanged="Picker_SelectedIndexChanged"
+        ItemDisplayBinding="{Binding Name}"
         BackgroundColor="{StaticResource Primary}"
             TextColor="{StaticResource Secondary}">
         </Picker>
@@ -28,13 +29,14 @@
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="m:BoughtProducts" >
-                        <Grid>
+                    <DataTemplate x:DataType="m:BoughtProducts">
+                        <Grid Padding="0,6">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <!-- Toon hier de naam van de Client naam van de boodschappenlijst -->
+                            <Label Grid.Column="0" Text="{Binding Client.Name}"/>
+                            <Label Grid.Column="1" Text="{Binding GroceryList.Name}"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
