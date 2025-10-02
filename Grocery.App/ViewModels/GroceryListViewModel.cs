@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Grocery.Core.Interfaces.Services;
 using Grocery.Core.Models;
 using System.Collections.ObjectModel;
+using System.Data;
 
 namespace Grocery.App.ViewModels
 {
@@ -10,12 +11,18 @@ namespace Grocery.App.ViewModels
     {
         public ObservableCollection<GroceryList> GroceryLists { get; set; }
         private readonly IGroceryListService _groceryListService;
+        private readonly GlobalViewModel _global;
 
-        public GroceryListViewModel(IGroceryListService groceryListService) 
+        public Client Client => _global.Client;
+
+        public GroceryListViewModel(IGroceryListService groceryListService, GlobalViewModel global)
         {
-            Title = "Boodschappenlijst";
+            Title = "Boodschappenlijsten";
             _groceryListService = groceryListService;
-            GroceryLists = new(_groceryListService.GetAll());
+            _global = global;
+
+            // Vul de ObservableCollection met data uit de service
+            GroceryLists = new ObservableCollection<GroceryList>(_groceryListService.GetAll());
         }
 
         [RelayCommand]
@@ -34,6 +41,13 @@ namespace Grocery.App.ViewModels
         {
             base.OnDisappearing();
             GroceryLists.Clear();
+        }
+
+        [RelayCommand]
+        private async Task ShowBoughtProducts()
+        {
+            if (_global.Client?.Role == Role.Admin)
+                await Shell.Current.GoToAsync(nameof(Views.BoughtProductsView));
         }
     }
 }
