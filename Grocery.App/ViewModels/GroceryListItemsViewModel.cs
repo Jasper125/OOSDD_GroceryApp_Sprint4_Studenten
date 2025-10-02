@@ -95,29 +95,30 @@ namespace Grocery.App.ViewModels
         }
 
         [RelayCommand]
-        public void IncreaseAmount(int productId)
+        public void IncreaseAmount(GroceryListItem item )
         {
-            GroceryListItem? item = MyGroceryListItems.FirstOrDefault(x => x.ProductId == productId);
             if (item == null) return;
+            if (item.Product == null) return;
             if (item.Amount >= item.Product.Stock) return;
+
             item.Amount++;
             _groceryListItemsService.Update(item);
+
             item.Product.Stock--;
             _productService.Update(item.Product);
-            OnGroceryListChanged(GroceryList);
         }
 
         [RelayCommand]
-        public void DecreaseAmount(int productId)
+        public void DecreaseAmount(GroceryListItem item )
         {
-            GroceryListItem? item = MyGroceryListItems.FirstOrDefault(x => x.ProductId == productId);
             if (item == null) return;
             if (item.Amount <= 0) return;
+
             item.Amount--;
             _groceryListItemsService.Update(item);
+
             item.Product.Stock++;
             _productService.Update(item.Product);
-            OnGroceryListChanged(GroceryList);
         }
     }
 }
